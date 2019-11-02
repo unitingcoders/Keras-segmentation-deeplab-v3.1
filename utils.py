@@ -104,6 +104,13 @@ def get_VOC2012_classes():
     }
     return PASCAL_VOC_classes
 
+def get_matting_classes():
+    MATTING_CLASSES = {
+        0: 'background', 
+        1: 'foreground'
+    }
+    return MATTING_CLASSES
+
 
 def sparse_crossentropy_ignoring_last_label(y_true, y_pred):
     nb_classes = K.int_shape(y_pred)[-1]
@@ -240,8 +247,8 @@ class SegmentationGenerator(Sequence):
         
         self.blur = blur
         self.histeq = do_ahisteq
-        self.image_path_list = sorted(glob.glob(os.path.join(folder, 'JPEGImages', 'train', '*')))
-        self.label_path_list = sorted(glob.glob(os.path.join(folder, 'SegmentationClassAug', '*')))
+        self.image_path_list = sorted(glob.glob(os.path.join(folder, 'image', '*')))
+        self.label_path_list = sorted(glob.glob(os.path.join(folder, 'mask_new', '*')))
 
         np.random.seed(seed)
         
@@ -254,7 +261,7 @@ class SegmentationGenerator(Sequence):
         self.label_path_list = [self.label_path_list[j] for j in x]
         
         if mode == 'test':
-            self.image_path_list = sorted(glob.glob(os.path.join(folder, 'JPEGImages', 'test', '*')))[:100]
+            self.image_path_list = sorted(glob.glob(os.path.join(folder, 'image', '*')))[:100]
         
         self.mode = mode
         self.n_classes = n_classes
